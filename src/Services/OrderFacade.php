@@ -49,4 +49,10 @@ final class OrderFacade
 
         return $order;
     }
+
+    /** @return Order[] */
+    public function listOrders(): array
+    {
+        return $this->repository->findAll();
+    }
 }
