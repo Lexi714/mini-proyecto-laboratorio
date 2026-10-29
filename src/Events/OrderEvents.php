@@ -28,11 +28,8 @@ class OrderEvents
     public function pedidoCreado(Order $order): void
     {
         // ❌ llamadas directas y encadenadas
-        $email = new EmailNotification();
-        $email->enviarEmail('paciente@mail.com', 'Pedido creado', "Pedido {$order->id}");
-
-        $sms = new SmsNotification();
-        $sms->mandarSms('3704000000', "Pedido {$order->id} creado");
+        NotificationFactory::create('email', 'paciente@mail.com', 'Pedido creado')->send("Pedido {$order->id}");
+        NotificationFactory::create('sms', '3704000000')->send("Pedido {$order->id} creado");
 
         // ❌ Si esta linea lanza una excepcion, el mail ya salio pero el
         //    dashboard nunca se entera. Estado inconsistente y silencioso.

@@ -42,9 +42,8 @@ class OrderController
         $conexion = Connection::obtener();
         $conexion->ejecutar("INSERT INTO orders VALUES ({$id}, '{$paciente}', {$total})");
 
-        // ❌ 4. Notificacion resuelta otra vez con if (deberia ser Factory)
-        $notificador = new NotificationSender();
-        $notificador->enviar('email', 'paciente@mail.com', "Pedido {$id} creado");
+        // 4. Notificacion
+        NotificationFactory::create('email', 'paciente@mail.com', 'Pedido del laboratorio')->send("Pedido {$id} creado");
 
         // ❌ 5. HTML impreso desde el controlador (deberia ser una View)
         echo "<h1>Pedido creado</h1>";
