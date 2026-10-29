@@ -62,7 +62,7 @@ class OrderService
         // ---- 3. Persistencia (deberia ser un Repository) ----
         // ❌ new adentro del metodo: no se puede reemplazar por un doble en pruebas
         $order = new Order($id, $paciente, $total, $tipoPaciente);
-        $order->guardar();
+        (new OrderRepository(Connection::obtener()))->save($order);
 
         // ---- 4. Notificacion (deberia ser una Factory) ----
         // ❌ MISMO if que ya existe en NotificationSender::enviar()
