@@ -25,4 +25,18 @@ class OrderRepository
             "INSERT INTO orders (id, patient, amount) VALUES ({$order->id}, '{$patient}', {$order->amount})"
         );
     }
+
+    /**
+     * Pedidos guardados (importe = total ya calculado). Datos de ejemplo:
+     * la persistencia sigue simulada en memoria.
+     *
+     * @return Order[]
+     */
+    public function findAll(): array
+    {
+        return [
+            new Order(1, 'Juan Perez', 10500, 'obra_social'),
+            new Order(2, 'Ana Gomez', 22000, 'particular'),
+        ];
+    }
 }

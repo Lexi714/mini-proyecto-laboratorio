@@ -38,7 +38,18 @@ define('DB_NAME', $config['name']);
 define('DB_USER', $config['user']);
 define('DB_PASS', $config['pass']);
 
-$controller = new OrderController();
+// Raiz de composicion: aca se arman las dependencias. OrderSubject va sin
+// observadores suscritos, igual que el flujo web anterior.
+$controller = new OrderController(
+    new OrderFacade(
+        new OrderValidator(),
+        new OrderPricingService(),
+        new OrderRepository(Connection::obtener()),
+        new OrderNotifier(),
+        new OrderSubject()
+    ),
+    new ReportService()
+);
 
 $rutas = [
     'crear'   => fn() => $controller->create(),
