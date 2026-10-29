@@ -67,9 +67,12 @@ class OrderService
         // ---- 4. Notificacion ----
         NotificationFactory::create($tipoNotificacion, $destino)->send("Pedido {$id} por $ {$total}");
 
-        // ---- 5. Avisos internos (deberia ser un Observer) ----
-        $eventos = new OrderEvents();
-        $eventos->pedidoCreado($order);
+        // ---- 5. Avisos internos ----
+        $eventos = new OrderSubject();
+        $eventos->subscribe(new EmailObserver());
+        $eventos->subscribe(new SmsObserver());
+        $eventos->subscribe(new DashboardObserver());
+        $eventos->notify($order);
 
         // ---- 6. Reporte (deberia ser un Decorator) ----
         $generador = new ReportGenerator();

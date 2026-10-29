@@ -30,7 +30,11 @@ require_once __DIR__ . '/../src/Notifications/NotificationFactory.php';
 require_once __DIR__ . '/../src/Legacy/LegacyNotifier.php';
 require_once __DIR__ . '/../src/Legacy/LegacyNotifierAdapter.php';
 require_once __DIR__ . '/../src/Reports/ReportGenerator.php';
-require_once __DIR__ . '/../src/Events/OrderEvents.php';
+require_once __DIR__ . '/../src/Events/OrderObserver.php';
+require_once __DIR__ . '/../src/Events/EmailObserver.php';
+require_once __DIR__ . '/../src/Events/SmsObserver.php';
+require_once __DIR__ . '/../src/Events/DashboardObserver.php';
+require_once __DIR__ . '/../src/Events/OrderSubject.php';
 require_once __DIR__ . '/../src/Services/OrderService.php';
 require_once __DIR__ . '/../src/Controllers/OrderController.php';
 
