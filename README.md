@@ -13,6 +13,7 @@ UTN FRRe (sede Formosa).
 6. [Estructura del proyecto](#6-estructura-del-proyecto)
 7. [Cómo agregar un tipo de paciente nuevo](#7-cómo-agregar-un-tipo-de-paciente-nuevo)
 8. [Flujo de trabajo del equipo](#8-flujo-de-trabajo-del-equipo)
+9. [Pruebas automáticas e integración continua](#9-pruebas-automáticas-e-integración-continua)
 
 ---
 
@@ -260,7 +261,9 @@ src/Legacy/           Sistema heredado de terceros y su adaptador
 src/Reports/          Report y decoradores
 src/Database/         Connection (Singleton)
 views/                Vistas: solo muestran datos, con la salida escapada
-docs/                 Consigna, mapa de deudas y deuda técnica
+tests/                Pruebas PHPUnit: Unit/ (una clase por vez) e Integration/ (varias juntas)
+docs/                 Consigna, mapa de deudas, deuda técnica y casos de prueba
+.github/workflows/    Pipeline de integración continua (GitHub Actions)
 ```
 
 **Convención de autoload:** cada clase vive en un archivo con su mismo nombre, dentro de una
@@ -285,3 +288,53 @@ Ejemplo: `prepaga` con 20 % de descuento. Son **2 archivos**:
 - Cada PR lo revisa otra persona, nunca su autor.
 - Commits con convención: `feat:`, `fix:`, `refactor:`, `docs:`.
 - El código viejo se borra: conservarlo "por las dudas" es deuda nueva.
+
+---
+
+## 9. Pruebas automáticas e integración continua
+
+El proyecto tiene pruebas automáticas con **PHPUnit** y un pipeline de **GitHub Actions** que las corre solo.
+
+### Correr las pruebas en tu computadora
+
+Hace falta Composer (Laragon ya lo trae; en la terminal de Laragon escribí `composer --version` para comprobarlo).
+
+```bash
+cd C:\laragon\www\mini-proyecto-laboratorio
+composer install      # una sola vez: descarga PHPUnit en la carpeta vendor/
+composer test         # corre todas las pruebas
+composer lint         # revisa sintaxis y estilo (PSR-12)
+```
+
+Resultado esperado de `composer test`: una línea final como `OK (81 tests, ...)`. Si algo falla,
+PHPUnit muestra qué prueba falló, el valor esperado y el obtenido.
+
+Para correr una parte: `vendor/bin/phpunit --testsuite unit` o `--testsuite integration`.
+La carpeta `vendor/` no se versiona (está en `.gitignore`).
+
+### Qué se prueba
+
+| Carpeta | Qué contiene |
+|---|---|
+| `tests/Unit/` | Pruebas unitarias: una clase por vez (estrategias, validador, modelo, repositorio, conexión, notificaciones, adaptador, observadores, decoradores, fachada) |
+| `tests/Integration/` | Controlador con sus vistas y el punto de entrada `public/index.php` ejecutado como lo haría el servidor |
+
+Cada funcionalidad tiene al menos un caso positivo y uno negativo. Los casos están documentados
+(identificador, descripción, precondiciones, datos de entrada, pasos y resultado esperado) en
+[`docs/CASOS-DE-PRUEBA.md`](docs/CASOS-DE-PRUEBA.md), con una tabla que indica en qué archivo y método
+está cada uno.
+
+### Integración continua
+
+El archivo [`.github/workflows/ci.yml`](.github/workflows/ci.yml) se ejecuta **en cada push y en cada
+Pull Request**, con PHP 8.1, 8.2 y 8.3. Los pasos son: descargar el código, instalar PHP, instalar
+las dependencias (`composer install`), revisar sintaxis y estilo (`composer lint`) y ejecutar las
+pruebas. Si cualquier paso falla, el commit o el PR queda marcado con una cruz roja en GitHub
+(pestaña **Actions**) y no conviene mergearlo.
+
+### Agregar una prueba nueva
+
+1. Crear `tests/Unit/<Carpeta>/<Clase>Test.php` con una clase que extienda `PHPUnit\Framework\TestCase`.
+2. Un método `public function testAlgo(): void` por caso; el nombre dice qué se espera.
+3. Sumar el caso (con su identificador `CP-...`) a `docs/CASOS-DE-PRUEBA.md`.
+4. Correr `composer test` y `composer lint` antes de hacer el commit.
