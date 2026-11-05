@@ -1,0 +1,30 @@
+{
+    "name": "utn-frre/laboratorio-pedidos",
+    "description": "Mini proyecto laboratorio-pedidos (TP Metodologia de Sistemas II)",
+    "type": "project",
+    "license": "proprietary",
+    "require": {
+        "php": ">=8.1"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^10.5",
+        "php-parallel-lint/php-parallel-lint": "^1.4",
+        "squizlabs/php_codesniffer": "^3.10"
+    },
+    "autoload": {
+        "classmap": ["src/"]
+    },
+    "config": {
+        "sort-packages": true,
+        "platform": {
+            "php": "8.1.0"
+        }
+    },
+    "scripts": {
+        "test": "phpunit",
+        "lint": [
+            "parallel-lint src tests public config views",
+            "phpcs"
+        ]
+    }
+}
