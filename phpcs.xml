@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<ruleset name="laboratorio-pedidos">
+    <description>Estandar PSR-12 para el codigo del proyecto.</description>
+
+    <file>src</file>
+    <file>tests</file>
+
+    <arg name="colors"/>
+    <arg value="sp"/>
+
+    <rule ref="PSR12">
+        <!-- El proyecto usa clases en el espacio de nombres global (autoload propio). -->
+        <exclude name="PSR1.Classes.ClassDeclaration.MissingNamespace"/>
+        <!-- El comentario de cada clase va pegado a la clase (PHPCS lo toma como "encabezado del archivo"). -->
+        <exclude name="PSR12.Files.FileHeader.SpacingAfterBlock"/>
+    </rule>
+</ruleset>
